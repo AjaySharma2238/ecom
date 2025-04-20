@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard | EcomGuru</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .dashboard-card {
+        transition: all 0.3s ease;
+      }
+      .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      }
+      .guest-restricted {
+        opacity: 0.7;
+        position: relative;
+      }
+      .guest-restricted::after {
+        content: "Guest Access Restricted";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: #6b7280;
+        border-radius: 0.5rem;
+      }
+      .progress-bar {
+        height: 8px;
+        border-radius: 4px;
+        background-color: #e5e7eb;
+        overflow: hidden;
+      }
+      .progress-bar-fill {
+        height: 100%;
+        background-color: #6366f1;
+        transition: width 0.5s ease;
+      }
+      .chart-container {
+        height: 250px;
+      }
+      .notification-dot {
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        width: 12px;
+        height: 12px;
+        background-color: #ef4444;
+        border-radius: 50%;
+      }
+    </style>
+  </head>
+  <body class="font-sans bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 flex items-center">
+              <i class="fas fa-chart-line text-indigo-600 text-2xl mr-2"></i>
+              <span class="text-xl font-bold text-gray-800">EcomGuru</span>
+            </div>
+            <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+              <a
+                href="index.html"
+                class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                >Home</a
+              >
+              <a
+                href="#"
+                id="guideLink"
+                class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                >Guide</a
+              >
+              <a
+                href="#"
+                id="calculatorLink"
+                class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                >Calculator</a
+              >
+              <a
+                href="#"
+                id="analyticsLink"
+                class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                >Analytics</a
+              >
+            </div>
+          </div>
+          <div class="hidden sm:ml-6 sm:flex sm:items-center">
+            <div class="relative mr-4">
+              <button id="notificationBtn" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-bell text-xl"></i>
+                <span class="notification-dot hidden"></span>
+              </button>
+            </div>
+            <span
+              class="mr-4 text-sm font-medium text-gray-700"
+              id="welcomeMessage"
+            ></span>
+            <button
+              id="logoutBtn"
+              class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+            >
+              Logout
+            </button>
+          </div>
+          <div class="-mr-2 flex items-center sm:hidden">
+            <button
+              type="button"
+              id="mobileMenuBtn"
+              class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+            >
+              <span class="sr-only">Open user menu</span>
+              <i class="fas fa-bars"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="hidden sm:hidden" id="mobileMenu">
+      <div class="pt-4 pb-3 border-t border-gray-200">
+        <div class="flex items-center px-4">
+          <div class="flex-shrink-0">
+            <div
+              class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center"
+            >
+              <i class="fas fa-user text-indigo-600"></i>
+            </div>
+          </div>
+          <div class="ml-3">
+            <div
+              class="text-base font-medium text-gray-800"
+              id="mobileWelcomeMessage"
+            ></div>
+          </div>
+        </div>
+        <div class="mt-3 px-2 space-y-1">
+          <a
+            href="index.html"
+            class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+            >Home</a
+          >
+          <a
+            href="#"
+            id="mobileGuideLink"
+            class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+            >Guide</a
+          >
+          <a
+            href="#"
+            id="mobileCalculatorLink"
+            class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+            >Calculator</a
+          >
+          <a
+            href="#"
+            id="mobileAnalyticsLink"
+            class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+            >Analytics</a
+          >
+          <button
+            id="mobileLogoutBtn"
+            class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification Dropdown -->
+    <div id="notificationDropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg z-10">
+      <div class="p-4 border-b border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900">Notifications</h3>
+      </div>
+      <div id="notificationList" class="max-h-60 overflow-y-auto">
+        <!-- Notifications will be populated here -->
+      </div>
+      <div class="p-2 border-t border-gray-200 text-center">
+        <a href="#" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">View all notifications</a>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <div class="px-4 py-6 sm:px-0">
+        <!-- Welcome Section -->
+        <div class="bg-white shadow rounded-lg p-6 mb-8">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div>
+              <h2 class="text-2xl font-bold text-gray-900" id="dashboardWelcome"></h2>
+              <p class="mt-2 text-gray-600">
+                Access your tools and resources to grow your e-commerce business
+              </p>
+            </div>
+            <div class="mt-4 md:mt-0">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 bg-indigo-100 rounded-full p-2">
+                  <i class="fas fa-trophy text-indigo-600"></i>
+                </div>
+                <div class="ml-3">
+                  <p class="text-sm font-medium text-gray-500">Your seller level</p>
+                  <p class="text-sm font-semibold text-gray-900" id="sellerLevel">Basic Seller</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="grid grid-cols-1 gap-6 mb-8 sm:grid-cols-2 lg:grid-cols-4">
+          <!-- Total Profit Card -->
+          <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 bg-green-100 rounded-md p-3">
+                  <i class="fas fa-rupee-sign text-green-600 text-2xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="text-lg font-medium text-gray-900">Total Profit</h3>
+                  <p class="mt-1 text-2xl font-semibold text-gray-900" id="totalProfit">₹12,450</p>
+                </div>
+              </div>
+              <div class="mt-4">
+                <div class="flex justify-between text-sm text-gray-500">
+                  <span>Last 30 days</span>
+                  <span class="flex items-center text-green-600">
+                    <i class="fas fa-arrow-up mr-1"></i> 12.5%
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Products Listed Card -->
+          <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 bg-blue-100 rounded-md p-3">
+                  <i class="fas fa-boxes text-blue-600 text-2xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="text-lg font-medium text-gray-900">Products Listed</h3>
+                  <p class="mt-1 text-2xl font-semibold text-gray-900" id="productsListed">24</p>
+                </div>
+              </div>
+              <div class="mt-4">
+                <div class="flex justify-between text-sm text-gray-500">
+                  <span>Active listings</span>
+                  <span class="flex items-center text-blue-600">
+                    <i class="fas fa-arrow-up mr-1"></i> 3 new
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Conversion Rate Card -->
+          <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 bg-purple-100 rounded-md p-3">
+                  <i class="fas fa-percentage text-purple-600 text-2xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="text-lg font-medium text-gray-900">Conversion Rate</h3>
+                  <p class="mt-1 text-2xl font-semibold text-gray-900" id="conversionRate">3.2%</p>
+                </div>
+              </div>
+              <div class="mt-4">
+                <div class="flex justify-between text-sm text-gray-500">
+                  <span>Last 30 days</span>
+                  <span class="flex items-center text-purple-600">
+                    <i class="fas fa-arrow-up mr-1"></i> 0.8%
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Platform Performance Card -->
+          <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 bg-yellow-100 rounded-md p-3">
+                  <i class="fas fa-chart-pie text-yellow-600 text-2xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="text-lg font-medium text-gray-900">Top Platform</h3>
+                  <p class="mt-1 text-2xl font-semibold text-gray-900" id="topPlatform">Amazon</p>
+                </div>
+              </div>
+              <div class="mt-4">
+                <div class="flex justify-between text-sm text-gray-500">
+                  <span>By revenue</span>
+                  <span class="flex items-center text-yellow-600">
+                    <i class="fas fa-star mr-1"></i> 68%
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Dashboard Content -->
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <!-- Left Column -->
+          <div class="lg:col-span-2">
+            <!-- Sales Chart -->
+            <div class="bg-white shadow rounded-lg p-6 mb-6">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-medium text-gray-900">Sales Performance</h3>
+                <div class="flex">
+                  <button class="px-3 py-1 text-sm font-medium rounded-md bg-indigo-100 text-indigo-700 mr-2">30 Days</button>
+                  <button class="px-3 py-1 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-100">90 Days</button>
+                </div>
+              </div>
+              <div class="chart-container">
+                <!-- Chart will be rendered here -->
+                <div class="flex items-center justify-center h-full">
+                  <div class="text-center">
+                    <i class="fas fa-chart-line text-gray-300 text-5xl mb-2"></i>
+                    <p class="text-gray-500">Sales chart will appear here</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="bg-white shadow rounded-lg p-6">
+              <h3 class="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
+              <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <a href="#" class="bg-indigo-50 rounded-lg p-4 flex items-center hover:bg-indigo-100 transition-colors">
+                  <div class="flex-shrink-0 bg-indigo-100 rounded-md p-3">
+                    <i class="fas fa-plus-circle text-indigo-600"></i>
+                  </div>
+                  <div class="ml-4">
+                    <h4 class="text-sm font-medium text-gray-900">Add New Product</h4>
+                    <p class="text-xs text-gray-500">List a new item for sale</p>
+                  </div>
+                </a>
+                <a href="#" class="bg-green-50 rounded-lg p-4 flex items-center hover:bg-green-100 transition-colors">
+                  <div class="flex-shrink-0 bg-green-100 rounded-md p-3">
+                    <i class="fas fa-bullhorn text-green-600"></i>
+                  </div>
+                  <div class="ml-4">
+                    <h4 class="text-sm font-medium text-gray-900">Run Promotion</h4>
+                    <p class="text-xs text-gray-500">Boost your sales</p>
+                  </div>
+                </a>
+                <a href="#" class="bg-blue-50 rounded-lg p-4 flex items-center hover:bg-blue-100 transition-colors">
+                  <div class="flex-shrink-0 bg-blue-100 rounded-md p-3">
+                    <i class="fas fa-file-invoice-dollar text-blue-600"></i>
+                  </div>
+                  <div class="ml-4">
+                    <h4 class="text-sm font-medium text-gray-900">Generate Report</h4>
+                    <p class="text-xs text-gray-500">Download sales data</p>
+                  </div>
+                </a>
+                <a href="#" class="bg-purple-50 rounded-lg p-4 flex items-center hover:bg-purple-100 transition-colors">
+                  <div class="flex-shrink-0 bg-purple-100 rounded-md p-3">
+                    <i class="fas fa-question-circle text-purple-600"></i>
+                  </div>
+                  <div class="ml-4">
+                    <h4 class="text-sm font-medium text-gray-900">Get Support</h4>
+                    <p class="text-xs text-gray-500">Contact our team</p>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column -->
+          <div>
+            <!-- Dashboard Cards -->
+            <div class="grid grid-cols-1 gap-6">
+              <!-- Ecommerce Guide Card -->
+              <div
+                id="guideCard"
+                class="dashboard-card bg-white overflow-hidden shadow rounded-lg cursor-pointer"
+              >
+                <div class="px-4 py-5 sm:p-6 h-full flex flex-col">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-indigo-100 rounded-md p-3">
+                      <i class="fas fa-book-open text-indigo-600 text-2xl"></i>
+                    </div>
+                    <div class="ml-4">
+                      <h3 class="text-lg font-medium text-gray-900">
+                        Ecommerce Guide
+                      </h3>
+                      <p class="mt-1 text-sm text-gray-500">
+                        Platform-specific selling guides
+                      </p>
+                    </div>
+                  </div>
+                  <div class="mt-4 flex-grow">
+                    <p class="text-sm text-gray-600">
+                      Learn how to sell effectively on Amazon, Flipkart, and Meesho with our comprehensive guides.
+                    </p>
+                  </div>
+                  <div
+                    class="mt-4 text-sm font-medium text-indigo-600 flex items-center"
+                  >
+                    View guides <i class="fas fa-chevron-right ml-1"></i>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Profit Calculator Card -->
+              <div
+                id="calculatorCard"
+                class="dashboard-card bg-white overflow-hidden shadow rounded-lg cursor-pointer"
+              >
+                <div class="px-4 py-5 sm:p-6 h-full flex flex-col">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-green-100 rounded-md p-3">
+                      <i class="fas fa-calculator text-green-600 text-2xl"></i>
+                    </div>
+                    <div class="ml-4">
+                      <h3 class="text-lg font-medium text-gray-900">
+                        Profit Calculator
+                      </h3>
+                      <p class="mt-1 text-sm text-gray-500">
+                        Calculate your potential profits
+                      </p>
+                    </div>
+                  </div>
+                  <div class="mt-4 flex-grow">
+                    <p class="text-sm text-gray-600">
+                      Calculate profit margins for individual or bulk products across different platforms.
+                    </p>
+                  </div>
+                  <div
+                    class="mt-4 text-sm font-medium text-green-600 flex items-center"
+                  >
+                    Calculate now <i class="fas fa-chevron-right ml-1"></i>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Saved Calculations Card -->
+              <div
+                id="savedCard"
+                class="dashboard-card bg-white overflow-hidden shadow rounded-lg cursor-pointer"
+              >
+                <div class="px-4 py-5 sm:p-6 h-full flex flex-col">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-blue-100 rounded-md p-3">
+                      <i class="fas fa-save text-blue-600 text-2xl"></i>
+                    </div>
+                    <div class="ml-4">
+                      <h3 class="text-lg font-medium text-gray-900">
+                        Saved Calculations
+                      </h3>
+                      <p class="mt-1 text-sm text-gray-500">
+                        Your previous profit calculations
+                      </p>
+                    </div>
+                  </div>
+                  <div class="mt-4 flex-grow">
+                    <div
+                      id="savedCalculationsPreview"
+                      class="text-sm text-gray-600"
+                    >
+                      <!-- Dynamically populated -->
+                    </div>
+                  </div>
+                  <div
+                    class="mt-4 text-sm font-medium text-blue-600 flex items-center"
+                  >
+                    View all <i class="fas fa-chevron-right ml-1"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="bg-white shadow rounded-lg p-6 mt-6">
+              <h3 class="text-lg font-medium text-gray-900 mb-4">Recent Activity</h3>
+              <div class="space-y-4">
+                <div class="flex">
+                  <div class="flex-shrink-0">
+                    <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
+                      <i class="fas fa-check text-green-600"></i>
+                    </div>
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-900">New order received</p>
+                    <p class="text-sm text-gray-500">Product: Wireless Earbuds</p>
+                    <p class="text-xs text-gray-400">2 hours ago</p>
+                  </div>
+                </div>
+                <div class="flex">
+                  <div class="flex-shrink-0">
+                    <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                      <i class="fas fa-file-invoice-dollar text-blue-600"></i>
+                    </div>
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-900">Payment received</p>
+                    <p class="text-sm text-gray-500">Amount: ₹1,299.00</p>
+                    <p class="text-xs text-gray-400">5 hours ago</p>
+                  </div>
+                </div>
+                <div class="flex">
+                  <div class="flex-shrink-0">
+                    <div class="h-10 w-10 rounded-full bg-yellow-100 flex items-center justify-center">
+                      <i class="fas fa-exclamation-triangle text-yellow-600"></i>
+                    </div>
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-900">Low stock alert</p>
+                    <p class="text-sm text-gray-500">Product: Smart Watch</p>
+                    <p class="text-xs text-gray-400">1 day ago</p>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-4 text-center">
+                <a href="#" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">View all activity</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      // Check authentication on page load
+      document.addEventListener("DOMContentLoaded", function () {
+        const currentUser = JSON.parse(
+          localStorage.getItem("currentUser") ||
+            sessionStorage.getItem("currentUser")
+        );
+        const isGuest = sessionStorage.getItem("isGuest") === "true";
+
+        // Redirect to login if not authenticated
+        if (!currentUser && !isGuest) {
+          window.location.href = "index.html";
+          return;
+        }
+
+        // Set welcome messages
+        if (isGuest) {
+          document.getElementById("welcomeMessage").textContent = "Guest User";
+          document.getElementById("mobileWelcomeMessage").textContent =
+            "Guest User";
+          document.getElementById("dashboardWelcome").textContent =
+            "Welcome, Guest User!";
+          document.getElementById("sellerLevel").textContent = "Trial User";
+
+          // Restrict access for guest users
+          document
+            .getElementById("guideCard")
+            .classList.add("guest-restricted");
+          document
+            .getElementById("savedCard")
+            .classList.add("guest-restricted");
+
+          // Disable links
+          document.getElementById("guideLink").classList.add("hidden");
+          document.getElementById("mobileGuideLink").classList.add("hidden");
+          document.getElementById("analyticsLink").classList.add("hidden");
+          document.getElementById("mobileAnalyticsLink").classList.add("hidden");
+        } else {
+          const sellerType =
+            currentUser.sellerType === "new"
+              ? "New Seller"
+              : "Experienced Seller";
+          document.getElementById(
+            "welcomeMessage"
+          ).textContent = `Welcome, ${currentUser.name}`;
+          document.getElementById(
+            "mobileWelcomeMessage"
+          ).textContent = `${currentUser.name} (${sellerType})`;
+          document.getElementById(
+            "dashboardWelcome"
+          ).textContent = `Welcome back, ${currentUser.name}!`;
+          
+          // Set seller level based on plan
+          const sellerLevel = currentUser.plan === 'pro' ? 'Pro Seller' : 'Basic Seller';
+          document.getElementById("sellerLevel").textContent = sellerLevel;
+        }
+
+        // Load saved calculations (only for logged-in users)
+        if (!isGuest) {
+          loadSavedCalculations();
+        }
+
+        // Load notifications
+        loadNotifications();
+
+        // Setup event listeners
+        setupEventListeners();
+      });
+
+      // Load saved calculations
+      function loadSavedCalculations() {
+        const savedCalculations = JSON.parse(
+          localStorage.getItem("savedCalculations") || "[]"
+        );
+        const previewElement = document.getElementById(
+          "savedCalculationsPreview"
+        );
+
+        if (savedCalculations.length === 0) {
+          previewElement.innerHTML =
+            '<p class="text-gray-500">No saved calculations yet</p>';
+          return;
+        }
+
+        const previewItems = savedCalculations.slice(0, 2);
+        previewElement.innerHTML = previewItems
+          .map(
+            (item) => `
+                <div class="mb-2 flex justify-between">
+                    <span class="truncate">${item.product}</span>
+                    <span class="font-medium">${item.profit}</span>
+                </div>
+            `
+          )
+          .join("");
+
+        if (savedCalculations.length > 2) {
+          previewElement.innerHTML += `<div class="text-gray-500 text-sm mt-1">+${
+            savedCalculations.length - 2
+          } more</div>`;
+        }
+      }
+
+      // Load notifications
+      function loadNotifications() {
+        const notifications = [
+          {
+            id: 1,
+            title: "New feature available",
+            message: "Try our new bulk profit calculator",
+            icon: "fas fa-calculator",
+            color: "text-indigo-600",
+            bgColor: "bg-indigo-100",
+            time: "2 hours ago",
+            read: false
+          },
+          {
+            id: 2,
+            title: "Account verified",
+            message: "Your seller account has been verified",
+            icon: "fas fa-check-circle",
+            color: "text-green-600",
+            bgColor: "bg-green-100",
+            time: "1 day ago",
+            read: true
+          },
+          {
+            id: 3,
+            title: "New guide published",
+            message: "Check out our latest Amazon selling guide",
+            icon: "fas fa-book",
+            color: "text-blue-600",
+            bgColor: "bg-blue-100",
+            time: "3 days ago",
+            read: true
+          }
+        ];
+
+        const notificationList = document.getElementById("notificationList");
+        const unreadCount = notifications.filter(n => !n.read).length;
+
+        // Show notification dot if there are unread notifications
+        if (unreadCount > 0) {
+          document.querySelector(".notification-dot").classList.remove("hidden");
+        }
+
+        // Populate notification list
+        notificationList.innerHTML = notifications
+          .map(
+            notification => `
+              <div class="px-4 py-3 border-b border-gray-200 hover:bg-gray-50">
+                <div class="flex items-start">
+                  <div class="flex-shrink-0 ${notification.bgColor} rounded-full p-2">
+                    <i class="${notification.icon} ${notification.color}"></i>
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-900">${notification.title}</p>
+                    <p class="text-sm text-gray-500">${notification.message}</p>
+                    <p class="text-xs text-gray-400 mt-1">${notification.time}</p>
+                  </div>
+                  ${!notification.read ? '<div class="ml-auto h-2 w-2 rounded-full bg-indigo-600"></div>' : ''}
+                </div>
+              </div>
+            `
+          )
+          .join("");
+      }
+
+      // Setup event listeners
+      function setupEventListeners() {
+        // Mobile menu toggle
+        document
+          .getElementById("mobileMenuBtn")
+          .addEventListener("click", function () {
+            document.getElementById("mobileMenu").classList.toggle("hidden");
+          });
+
+        // Notification toggle
+        document.getElementById("notificationBtn").addEventListener("click", function(e) {
+          e.stopPropagation();
+          document.getElementById("notificationDropdown").classList.toggle("hidden");
+        });
+
+        // Close notification dropdown when clicking outside
+        document.addEventListener("click", function() {
+          document.getElementById("notificationDropdown").classList.add("hidden");
+        });
+
+        // Logout
+        document.getElementById("logoutBtn").addEventListener("click", logout);
+        document
+          .getElementById("mobileLogoutBtn")
+          .addEventListener("click", logout);
+
+        // Card click handlers
+        document
+          .getElementById("guideCard")
+          .addEventListener("click", function () {
+            if (!this.classList.contains("guest-restricted")) {
+              window.location.href = "ecomGuide.html";
+            }
+          });
+
+        document
+          .getElementById("calculatorCard")
+          .addEventListener("click", function () {
+             window.location.href = 'calculator.html';
+          });
+
+        document
+          .getElementById("savedCard")
+          .addEventListener("click", function () {
+            if (!this.classList.contains("guest-restricted")) {
+              window.location.href = 'savedProducts.html';
+            }
+          });
+
+        // Nav link handlers
+        document
+          .getElementById("calculatorLink")
+          .addEventListener("click", function (e) {
+            e.preventDefault();
+            document.getElementById("calculatorCard").click();
+          });
+
+        document
+          .getElementById("mobileCalculatorLink")
+          .addEventListener("click", function (e) {
+            e.preventDefault();
+            document.getElementById("calculatorCard").click();
+          });
+
+        document
+          .getElementById("guideLink")
+          .addEventListener("click", function (e) {
+            e.preventDefault();
+            document.getElementById("guideCard").click();
+          });
+
+        document
+          .getElementById("mobileGuideLink")
+          .addEventListener("click", function (e) {
+            e.preventDefault();
+            document.getElementById("guideCard").click();
+          });
+
+        document
+          .getElementById("analyticsLink")
+          .addEventListener("click", function (e) {
+            e.preventDefault();
+            alert("Analytics feature coming soon!");
+          });
+
+        document
+          .getElementById("mobileAnalyticsLink")
+          .addEventListener("click", function (e) {
+            e.preventDefault();
+            alert("Analytics feature coming soon!");
+          });
+      }
+
+      // Logout function
+      function logout() {
+        localStorage.removeItem("currentUser");
+        sessionStorage.removeItem("currentUser");
+        sessionStorage.removeItem("isGuest");
+        window.location.href = "index.html";
+      }
+    </script>
+  </body>
+</html>

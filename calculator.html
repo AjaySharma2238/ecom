@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Profit Calculator | EcomGuru</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        .input-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        .input-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .result-card {
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .platform-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .tab-button {
+            transition: all 0.2s;
+        }
+        .tab-button.active {
+            border-bottom: 2px solid #6366f1;
+            color: #6366f1;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-chart-line text-indigo-600 text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-gray-800">EcomGuru</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <a href="dashboard.html" class="flex items-center text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+                        <i class="fas fa-arrow-left mr-1"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                Advanced Profit Calculator
+            </h1>
+            <p class="mt-3 text-xl text-gray-500 max-w-2xl mx-auto">
+                Calculate your potential profits across different platforms with detailed cost breakdowns
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Input Form -->
+            <div class="lg:col-span-1">
+                <div class="input-card bg-white shadow rounded-lg p-6 sticky top-6">
+                    <div class="flex border-b border-gray-200 mb-4">
+                        <button class="tab-button active py-2 px-4 mr-2" data-tab="basic">Basic</button>
+                        <button class="tab-button py-2 px-4" data-tab="advanced">Advanced</button>
+                    </div>
+                    
+                    <form id="calculatorForm">
+                        <div class="mb-4">
+                            <label for="platform" class="block text-sm font-medium text-gray-700 mb-1">Platform</label>
+                            <select id="platform" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                <option value="amazon">Amazon</option>
+                                <option value="flipkart">Flipkart</option>
+                                <option value="meesho">Meesho</option>
+                                <option value="jiomart">JioMart</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="productName" class="block text-sm font-medium text-gray-700 mb-1">Product Name (Optional)</label>
+                            <input type="text" id="productName" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="e.g., Wireless Headphones">
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="productCost" class="block text-sm font-medium text-gray-700 mb-1">Product Cost (₹)</label>
+                            <div class="relative rounded-md shadow-sm">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <span class="text-gray-500 sm:text-sm">₹</span>
+                                </div>
+                                <input type="number" id="productCost" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" placeholder="0.00" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="shippingCost" class="block text-sm font-medium text-gray-700 mb-1">Shipping Cost (₹)</label>
+                            <div class="relative rounded-md shadow-sm">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <span class="text-gray-500 sm:text-sm">₹</span>
+                                </div>
+                                <input type="number" id="shippingCost" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" placeholder="0.00" required value="0">
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="commission" class="block text-sm font-medium text-gray-700 mb-1">Platform Commission (%)</label>
+                            <div class="relative rounded-md shadow-sm">
+                                <input type="number" id="commission" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-12 sm:text-sm border-gray-300 rounded-md" placeholder="0" required>
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                    <span class="text-gray-500 sm:text-sm">%</span>
+                                </div>
+                            </div>
+                            <p class="mt-1 text-xs text-gray-500" id="commissionNote">Default commission rates: Amazon (15%), Flipkart (12%), Meesho (10%), JioMart (8%)</p>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="sellingPrice" class="block text-sm font-medium text-gray-700 mb-1">Selling Price (₹)</label>
+                            <div class="relative rounded-md shadow-sm">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <span class="text-gray-500 sm:text-sm">₹</span>
+                                </div>
+                                <input type="number" id="sellingPrice" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" placeholder="0.00" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <label for="quantity" class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
+                            <input type="number" id="quantity" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required value="1" min="1">
+                        </div>
+
+                        <!-- Advanced Fields (Hidden by default) -->
+                        <div id="advancedFields" class="hidden space-y-4 mb-6">
+                            <div>
+                                <label for="gstRate" class="block text-sm font-medium text-gray-700 mb-1">GST Rate (%)</label>
+                                <div class="relative rounded-md shadow-sm">
+                                    <input type="number" id="gstRate" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-12 sm:text-sm border-gray-300 rounded-md" placeholder="0" value="18">
+                                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                        <span class="text-gray-500 sm:text-sm">%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="packagingCost" class="block text-sm font-medium text-gray-700 mb-1">Packaging Cost (₹)</label>
+                                <div class="relative rounded-md shadow-sm">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <span class="text-gray-500 sm:text-sm">₹</span>
+                                    </div>
+                                    <input type="number" id="packagingCost" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" placeholder="0.00" value="0">
+                                </div>
+                            </div>
+                            <div>
+                                <label for="otherFees" class="block text-sm font-medium text-gray-700 mb-1">Other Fees (₹)</label>
+                                <div class="relative rounded-md shadow-sm">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <span class="text-gray-500 sm:text-sm">₹</span>
+                                    </div>
+                                    <input type="number" id="otherFees" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" placeholder="0.00" value="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex space-x-4">
+                            <button type="submit" class="flex-1 bg-indigo-600 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                <i class="fas fa-calculator mr-2"></i>Calculate
+                            </button>
+                            <button type="button" id="resetBtn" class="flex-1 bg-gray-200 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                                <i class="fas fa-redo mr-2"></i>Reset
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="lg:col-span-2">
+                <div id="resultsSection" class="hidden">
+                    <div class="result-card bg-white shadow rounded-lg p-6 mb-8">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-bold text-gray-900">Profit Analysis</h2>
+                            <div id="platformTag" class="platform-tag bg-indigo-100 text-indigo-800">
+                                <i class="fab fa-amazon mr-1"></i>
+                                <span>Amazon</span>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                            <div class="bg-indigo-50 p-4 rounded-lg">
+                                <p class="text-sm font-medium text-indigo-600">Profit Per Unit</p>
+                                <p class="text-2xl font-bold" id="profitPerUnit">₹0.00</p>
+                                <p class="text-xs text-indigo-500 mt-1" id="profitPerUnitNote">After all costs</p>
+                            </div>
+                            <div class="bg-green-50 p-4 rounded-lg">
+                                <p class="text-sm font-medium text-green-600">Net Profit (Total)</p>
+                                <p class="text-2xl font-bold" id="netProfit">₹0.00</p>
+                                <p class="text-xs text-green-500 mt-1" id="netProfitNote">For <span id="quantityDisplay">1</span> units</p>
+                            </div>
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <p class="text-sm font-medium text-blue-600">Break-even Quantity</p>
+                                <p class="text-2xl font-bold" id="breakEvenQty">0</p>
+                                <p class="text-xs text-blue-500 mt-1">To cover all costs</p>
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold mb-2">Cost Breakdown</h3>
+                            <div class="h-64">
+                                <canvas id="profitChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div>
+                                <h3 class="text-lg font-semibold mb-2">Detailed Calculation</h3>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between py-2 border-b border-gray-200">
+                                        <span>Total Revenue:</span>
+                                        <span id="totalRevenue">₹0.00</span>
+                                    </div>
+                                    <div class="flex justify-between py-2 border-b border-gray-200">
+                                        <span>Total Product Cost:</span>
+                                        <span id="totalProductCost">₹0.00</span>
+                                    </div>
+                                    <div class="flex justify-between py-2 border-b border-gray-200">
+                                        <span>Total Shipping Cost:</span>
+                                        <span id="totalShippingCost">₹0.00</span>
+                                    </div>
+                                    <div class="flex justify-between py-2 border-b border-gray-200">
+                                        <span>Platform Fees:</span>
+                                        <span id="platformFees">₹0.00</span>
+                                    </div>
+                                    <div class="flex justify-between py-2 border-b border-gray-200" id="gstRow">
+                                        <span>GST Amount:</span>
+                                        <span id="gstAmount">₹0.00</span>
+                                    </div>
+                                    <div class="flex justify-between py-2 border-b border-gray-200" id="packagingRow">
+                                        <span>Packaging Cost:</span>
+                                        <span id="packagingAmount">₹0.00</span>
+                                    </div>
+                                    <div class="flex justify-between py-2 border-b border-gray-200" id="otherFeesRow">
+                                        <span>Other Fees:</span>
+                                        <span id="otherFeesAmount">₹0.00</span>
+                                    </div>
+                                    <div class="flex justify-between py-2 font-bold">
+                                        <span>Net Profit:</span>
+                                        <span id="netProfitDetailed">₹0.00</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold mb-2">Profit Margins</h3>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between py-2 border-b border-gray-200">
+                                        <span>Gross Margin:</span>
+                                        <span id="grossMargin">0%</span>
+                                    </div>
+                                    <div class="flex justify-between py-2 border-b border-gray-200">
+                                        <span>Net Margin:</span>
+                                        <span id="netMargin">0%</span>
+                                    </div>
+                                    <div class="flex justify-between py-2">
+                                        <span>ROI (Return on Investment):</span>
+                                        <span id="roi">0%</span>
+                                    </div>
+                                </div>
+                                <div class="mt-4 bg-gray-50 p-4 rounded-lg">
+                                    <h4 class="text-sm font-medium text-gray-700 mb-2">Recommendations</h4>
+                                    <ul class="text-sm text-gray-600 space-y-1" id="recommendations">
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                            <span>Your pricing looks good compared to costs</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap gap-3">
+                            <button id="saveCalculation" class="flex-1 bg-indigo-600 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                <i class="fas fa-save mr-2"></i>Save Calculation
+                            </button>
+                            <button id="exportPdf" class="flex-1 bg-red-600 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                <i class="fas fa-file-pdf mr-2"></i>Export as PDF
+                            </button>
+                            <button id="exportCsv" class="flex-1 bg-green-600 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                <i class="fas fa-file-csv mr-2"></i>Export as CSV
+                            </button>
+                            <button id="shareCalculation" class="flex-1 bg-blue-600 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                <i class="fas fa-share-alt mr-2"></i>Share
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Empty State -->
+                <div id="emptyState" class="bg-white shadow rounded-lg p-12 text-center">
+                    <i class="fas fa-calculator text-gray-300 text-5xl mb-4"></i>
+                    <h3 class="text-lg font-medium text-gray-900">No Calculation Yet</h3>
+                    <p class="mt-2 text-sm text-gray-500">
+                        Enter your product details and click "Calculate" to see profit analysis
+                    </p>
+                    <div class="mt-6 grid grid-cols-2 gap-4 max-w-xs mx-auto">
+                        <div class="bg-indigo-50 p-3 rounded-lg">
+                            <i class="fas fa-box-open text-indigo-600 mb-1"></i>
+                            <p class="text-xs text-gray-600">Product Cost</p>
+                        </div>
+                        <div class="bg-green-50 p-3 rounded-lg">
+                            <i class="fas fa-truck text-green-600 mb-1"></i>
+                            <p class="text-xs text-gray-600">Shipping Cost</p>
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded-lg">
+                            <i class="fas fa-percentage text-blue-600 mb-1"></i>
+                            <p class="text-xs text-gray-600">Commission</p>
+                        </div>
+                        <div class="bg-purple-50 p-3 rounded-lg">
+                            <i class="fas fa-tag text-purple-600 mb-1"></i>
+                            <p class="text-xs text-gray-600">Selling Price</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Saved Calculations Preview -->
+                <div id="savedCalculationsPreview" class="bg-white shadow rounded-lg p-6 mt-8 hidden">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Recent Calculations</h3>
+                    <div class="space-y-3" id="savedCalculationsList">
+                        <!-- Will be populated dynamically -->
+                    </div>
+                    <div class="mt-4 text-center">
+                        <a href="savedProducts.html" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                            View all saved calculations <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // DOM elements
+        const calculatorForm = document.getElementById('calculatorForm');
+        const platformSelect = document.getElementById('platform');
+        const commissionInput = document.getElementById('commission');
+        const resultsSection = document.getElementById('resultsSection');
+        const emptyState = document.getElementById('emptyState');
+        const saveBtn = document.getElementById('saveCalculation');
+        const resetBtn = document.getElementById('resetBtn');
+        const savedCalculationsPreview = document.getElementById('savedCalculationsPreview');
+        const tabButtons = document.querySelectorAll('.tab-button');
+        
+        // Chart instance
+        let profitChart = null;
+
+        // Default commission rates
+        const defaultCommissions = {
+            amazon: 15,
+            flipkart: 12,
+            meesho: 10,
+            jiomart: 8,
+            other: 0
+        };
+
+        // Platform icons and colors
+        const platformData = {
+            amazon: { icon: 'fab fa-amazon', color: 'bg-orange-100 text-orange-800' },
+            flipkart: { icon: 'fas fa-shopping-bag', color: 'bg-blue-100 text-blue-800' },
+            meesho: { icon: 'fas fa-store', color: 'bg-pink-100 text-pink-800' },
+            jiomart: { icon: 'fas fa-bolt', color: 'bg-indigo-100 text-indigo-800' },
+            other: { icon: 'fas fa-globe', color: 'bg-gray-100 text-gray-800' }
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default commission based on platform
+            platformSelect.addEventListener('change', function() {
+                updatePlatformTag(this.value);
+                commissionInput.value = defaultCommissions[this.value];
+            });
+
+            // Initialize platform tag
+            updatePlatformTag(platformSelect.value);
+
+            // Tab switching
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    if (this.dataset.tab === 'advanced') {
+                        document.getElementById('advancedFields').classList.remove('hidden');
+                    } else {
+                        document.getElementById('advancedFields').classList.add('hidden');
+                    }
+                });
+            });
+
+            // Form submission
+            calculatorForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                calculateProfit();
+            });
+
+            // Reset form
+            resetBtn.addEventListener('click', resetCalculator);
+
+            // Save calculation
+            saveBtn.addEventListener('click', saveCalculation);
+
+            // Export buttons
+            document.getElementById('exportPdf').addEventListener('click', exportToPdf);
+            document.getElementById('exportCsv').addEventListener('click', exportToCsv);
+            document.getElementById('shareCalculation').addEventListener('click', shareCalculation);
+
+            // Load saved calculations preview
+            loadSavedCalculationsPreview();
+        });
+
+        // Update platform tag
+        function updatePlatformTag(platform) {
+            const platformTag = document.getElementById('platformTag');
+            const platformInfo = platformData[platform];
+            
+            platformTag.className = `platform-tag ${platformInfo.color} flex items-center`;
+            platformTag.innerHTML = `
+                <i class="${platformInfo.icon} mr-1"></i>
+                <span>${platformSelect.options[platformSelect.selectedIndex].text}</span>
+            `;
+        }
+
+        // Calculate profit
+        function calculateProfit() {
+            // Get input values
+            const platform = platformSelect.value;
+            const productName = document.getElementById('productName').value;
+            const productCost = parseFloat(document.getElementById('productCost').value) || 0;
+            const shippingCost = parseFloat(document.getElementById('shippingCost').value) || 0;
+            const commissionRate = parseFloat(commissionInput.value) / 100 || 0;
+            const sellingPrice = parseFloat(document.getElementById('sellingPrice').value) || 0;
+            const quantity = parseInt(document.getElementById('quantity').value) || 1;
+            const gstRate = parseFloat(document.getElementById('gstRate').value) / 100 || 0;
+            const packagingCost = parseFloat(document.getElementById('packagingCost').value) || 0;
+            const otherFees = parseFloat(document.getElementById('otherFees').value) || 0;
+
+            // Validate inputs
+            if (productCost <= 0) {
+                alert('Please enter a valid product cost');
+                return;
+            }
+            if (sellingPrice <= 0) {
+                alert('Please enter a valid selling price');
+                return;
+            }
+
+            // Calculations
+            const totalRevenue = sellingPrice * quantity;
+            const totalProductCost = productCost * quantity;
+            const totalShippingCost = shippingCost * quantity;
+            const totalPackagingCost = packagingCost * quantity;
+            const totalOtherFees = otherFees * quantity;
+            const platformFees = totalRevenue * commissionRate;
+            
+            // GST calculation (assuming GST is on selling price)
+            const gstAmount = totalRevenue * gstRate;
+            
+            const totalCost = totalProductCost + totalShippingCost + platformFees + gstAmount + totalPackagingCost + totalOtherFees;
+            const netProfit = totalRevenue - totalCost;
+            const profitPerUnit = netProfit / quantity;
+            
+            // Break-even quantity
+            const fixedCosts = 0; // Could add other fixed costs later
+            const contributionMargin = sellingPrice - productCost - shippingCost - packagingCost - otherFees - (sellingPrice * commissionRate) - (sellingPrice * gstRate);
+            const breakEvenQty = contributionMargin > 0 ? Math.ceil(fixedCosts / contributionMargin) : 0;
+
+            // Margins
+            const grossMargin = ((sellingPrice - productCost) / sellingPrice) * 100;
+            const netMargin = (netProfit / totalRevenue) * 100;
+            const roi = (netProfit / totalCost) * 100;
+
+            // Update UI
+            document.getElementById('profitPerUnit').textContent = `₹${profitPerUnit.toFixed(2)}`;
+            document.getElementById('netProfit').textContent = `₹${netProfit.toFixed(2)}`;
+            document.getElementById('breakEvenQty').textContent = breakEvenQty;
+            document.getElementById('quantityDisplay').textContent = quantity;
+            
+            document.getElementById('totalRevenue').textContent = `₹${totalRevenue.toFixed(2)}`;
+            document.getElementById('totalProductCost').textContent = `₹${totalProductCost.toFixed(2)}`;
+            document.getElementById('totalShippingCost').textContent = `₹${totalShippingCost.toFixed(2)}`;
+            document.getElementById('platformFees').textContent = `₹${platformFees.toFixed(2)}`;
+            document.getElementById('gstAmount').textContent = `₹${gstAmount.toFixed(2)}`;
+            document.getElementById('packagingAmount').textContent = `₹${totalPackagingCost.toFixed(2)}`;
+            document.getElementById('otherFeesAmount').textContent = `₹${totalOtherFees.toFixed(2)}`;
+            document.getElementById('netProfitDetailed').textContent = `₹${netProfit.toFixed(2)}`;
+            
+            document.getElementById('grossMargin').textContent = `${grossMargin.toFixed(1)}%`;
+            document.getElementById('netMargin').textContent = `${netMargin.toFixed(1)}%`;
+            document.getElementById('roi').textContent = `${roi.toFixed(1)}%`;
+
+            // Show/hide advanced rows
+            document.getElementById('gstRow').classList.toggle('hidden', gstAmount === 0);
+            document.getElementById('packagingRow').classList.toggle('hidden', totalPackagingCost === 0);
+            document.getElementById('otherFeesRow').classList.toggle('hidden', totalOtherFees === 0);
+
+            // Generate recommendations
+            generateRecommendations(netMargin, profitPerUnit, breakEvenQty);
+
+            // Show results
+            emptyState.classList.add('hidden');
+            resultsSection.classList.remove('hidden');
+
+            // Update chart
+            updateChart(totalProductCost, totalShippingCost, platformFees, gstAmount, totalPackagingCost, totalOtherFees, netProfit);
+        }
+
+        // Generate recommendations
+        function generateRecommendations(netMargin, profitPerUnit, breakEvenQty) {
+            const recommendationsList = document.getElementById('recommendations');
+            recommendationsList.innerHTML = '';
+            
+            if (netMargin < 10) {
+                addRecommendation('Consider increasing your selling price or reducing costs to improve margins', 'exclamation-triangle', 'yellow');
+            } else if (netMargin > 30) {
+                addRecommendation('Your pricing is excellent with healthy profit margins', 'check-circle', 'green');
+            } else {
+                addRecommendation('Your pricing looks good compared to costs', 'check-circle', 'green');
+            }
+            
+            if (profitPerUnit < 50) {
+                addRecommendation('Low profit per unit - consider higher value products or bulk discounts', 'exclamation-triangle', 'yellow');
+            }
+            
+            if (breakEvenQty > 50) {
+                addRecommendation('High break-even quantity - consider reducing fixed costs or increasing margins', 'exclamation-triangle', 'yellow');
+            }
+            
+            function addRecommendation(text, icon, color) {
+                const item = document.createElement('li');
+                item.className = 'flex items-start';
+                item.innerHTML = `
+                    <i class="fas fa-${icon} text-${color}-500 mt-1 mr-2"></i>
+                    <span>${text}</span>
+                `;
+                recommendationsList.appendChild(item);
+            }
+        }
+
+        // Update chart
+        function updateChart(productCost, shippingCost, platformFees, gstAmount, packagingCost, otherFees, netProfit) {
+            const ctx = document.getElementById('profitChart').getContext('2d');
+            
+            // Destroy previous chart if exists
+            if (profitChart) {
+                profitChart.destroy();
+            }
+            
+            // Prepare data
+            const labels = ['Product Cost', 'Shipping Cost', 'Platform Fees'];
+            const data = [productCost, shippingCost, platformFees];
+            const backgroundColors = ['#3B82F6', '#10B981', '#F59E0B'];
+            
+            // Add GST if applicable
+            if (gstAmount > 0) {
+                labels.push('GST Amount');
+                data.push(gstAmount);
+                backgroundColors.push('#EC4899');
+            }
+            
+            // Add packaging if applicable
+            if (packagingCost > 0) {
+                labels.push('Packaging Cost');
+                data.push(packagingCost);
+                backgroundColors.push('#8B5CF6');
+            }
+            
+            // Add other fees if applicable
+            if (otherFees > 0) {
+                labels.push('Other Fees');
+                data.push(otherFees);
+                backgroundColors.push('#6366F1');
+            }
+            
+            // Add net profit
+            labels.push('Net Profit');
+            data.push(netProfit);
+            backgroundColors.push('#14B8A6');
+            
+            profitChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: backgroundColors,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: ₹${value.toFixed(2)} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Reset calculator
+        function resetCalculator() {
+            calculatorForm.reset();
+            resultsSection.classList.add('hidden');
+            emptyState.classList.remove('hidden');
+            if (profitChart) {
+                profitChart.destroy();
+                profitChart = null;
+            }
+            // Reset to default commission
+            commissionInput.value = defaultCommissions[platformSelect.value];
+        }
+
+        // Save calculation to data.json
+        async function saveCalculation() {
+            const platform = platformSelect.value;
+            const productName = document.getElementById('productName').value || 'Unnamed Product';
+            const productCost = parseFloat(document.getElementById('productCost').value);
+            const sellingPrice = parseFloat(document.getElementById('sellingPrice').value);
+            const quantity = parseInt(document.getElementById('quantity').value);
+            const profitPerUnit = parseFloat(document.getElementById('profitPerUnit').textContent.replace('₹', ''));
+            const netProfit = parseFloat(document.getElementById('netProfit').textContent.replace('₹', ''));
+            const netMargin = parseFloat(document.getElementById('netMargin').textContent.replace('%', ''));
+
+            const calculation = {
+                id: Date.now(),
+                platform,
+                productName,
+                productCost,
+                sellingPrice,
+                quantity,
+                profitPerUnit,
+                netProfit,
+                netMargin,
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                // Send the new calculation to the server
+                const response = await fetch('data.json', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(calculation)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to save calculation');
+                }
+
+                // Show success message
+                showToast('Calculation saved successfully!', 'success');
+
+                // Update preview
+                loadSavedCalculationsPreview();
+            } catch (error) {
+                console.error(error);
+                showToast('Failed to save calculation', 'error');
+            }
+        }
+
+        // Load saved calculations preview from data.json
+        async function loadSavedCalculationsPreview() {
+            try {
+                const response = await fetch('data.json');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch saved calculations');
+                }
+
+                const data = await response.json(); // Fetch the entire JSON object
+                const savedCalculations = data.savedCalculations || []; // Access the savedCalculations array
+
+                const previewList = document.getElementById('savedCalculationsList');
+
+                if (!savedCalculations || savedCalculations.length === 0) {
+                    savedCalculationsPreview.classList.add('hidden');
+                    return;
+                }
+
+                savedCalculationsPreview.classList.remove('hidden');
+                previewList.innerHTML = '';
+
+                // Show only the first 3 calculations
+                savedCalculations.slice(0, 3).forEach(calc => {
+                    const platformInfo = platformData[calc.platform] || platformData.other;
+
+                    const item = document.createElement('div');
+                    item.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg';
+                    item.innerHTML = `
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 ${platformInfo.color} rounded-full p-2 mr-3">
+                                <i class="${platformInfo.icon}"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-900 truncate">${calc.productName}</p>
+                                <p class="text-xs text-gray-500">${new Date(calc.timestamp).toLocaleDateString()}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm font-medium ${calc.netMargin >= 20 ? 'text-green-600' : calc.netMargin >= 10 ? 'text-yellow-600' : 'text-red-600'}">
+                                ₹${calc.profitPerUnit.toFixed(2)}/unit
+                            </p>
+                            <p class="text-xs text-gray-500">${calc.netMargin.toFixed(1)}% margin</p>
+                        </div>
+                    `;
+                    item.addEventListener('click', () => loadSavedCalculation(calc));
+                    previewList.appendChild(item);
+                });
+            } catch (error) {
+                console.error(error);
+                showToast('Failed to load saved calculations', 'error');
+            }
+        }
+
+        // Load saved calculation
+        function loadSavedCalculation(calc) {
+            platformSelect.value = calc.platform;
+            document.getElementById('productName').value = calc.productName;
+            document.getElementById('productCost').value = calc.productCost;
+            document.getElementById('sellingPrice').value = calc.sellingPrice;
+            document.getElementById('quantity').value = calc.quantity;
+
+            // Update platform tag
+            updatePlatformTag(calc.platform);
+
+            // Trigger calculation
+            calculateProfit();
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Export to PDF
+        function exportToPdf() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Add title
+            doc.setFontSize(18);
+            doc.setTextColor(40, 40, 40);
+            doc.text('EcomGuru Profit Calculation', 105, 20, { align: 'center' });
+            
+            // Add date
+            doc.setFontSize(10);
+            doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 105, 30, { align: 'center' });
+            
+            // Add platform info
+            doc.setFontSize(12);
+            doc.text(`Platform: ${platformSelect.options[platformSelect.selectedIndex].text}`, 20, 40);
+            
+            // Add product info if available
+            const productName = document.getElementById('productName').value;
+            if (productName) {
+                doc.text(`Product: ${productName}`, 20, 50);
+            }
+            
+            // Add key metrics
+            doc.setFontSize(14);
+            doc.text('Key Metrics', 20, 70);
+            doc.setFontSize(12);
+            doc.text(`Profit Per Unit: ${document.getElementById('profitPerUnit').textContent}`, 20, 80);
+            doc.text(`Net Profit: ${document.getElementById('netProfit').textContent}`, 20, 90);
+            doc.text(`Net Margin: ${document.getElementById('netMargin').textContent}`, 20, 100);
+            
+            // Add cost breakdown
+            doc.setFontSize(14);
+            doc.text('Cost Breakdown', 20, 120);
+            doc.setFontSize(12);
+            doc.text(`Total Revenue: ${document.getElementById('totalRevenue').textContent}`, 20, 130);
+            doc.text(`Total Product Cost: ${document.getElementById('totalProductCost').textContent}`, 20, 140);
+            doc.text(`Total Shipping Cost: ${document.getElementById('totalShippingCost').textContent}`, 20, 150);
+            doc.text(`Platform Fees: ${document.getElementById('platformFees').textContent}`, 20, 160);
+            
+            // Save the PDF
+            doc.save(`EcomGuru_Profit_Calculation_${new Date().toISOString().slice(0,10)}.pdf`);
+            
+            showToast('PDF exported successfully!', 'success');
+        }
+
+        // Export to CSV
+        function exportToCsv() {
+            const platform = platformSelect.value;
+            const productName = document.getElementById('productName').value || 'Unnamed Product';
+            const productCost = parseFloat(document.getElementById('productCost').value);
+            const sellingPrice = parseFloat(document.getElementById('sellingPrice').value);
+            const quantity = parseInt(document.getElementById('quantity').value);
+            const profitPerUnit = document.getElementById('profitPerUnit').textContent.replace('₹', '');
+            const netProfit = document.getElementById('netProfit').textContent.replace('₹', '');
+            const netMargin = document.getElementById('netMargin').textContent;
+
+            // Create CSV content
+            const csvContent = [
+                ['Platform', 'Product Name', 'Product Cost', 'Selling Price', 'Quantity', 'Profit Per Unit', 'Net Profit', 'Net Margin'],
+                [platform, productName, productCost, sellingPrice, quantity, profitPerUnit, netProfit, netMargin]
+            ].map(row => row.join(',')).join('\n');
+
+            // Create download link
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `profit_calculation_${new Date().toISOString().slice(0,10)}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showToast('CSV exported successfully!', 'success');
+        }
+
+        // Share calculation
+        function shareCalculation() {
+            const productName = document.getElementById('productName').value || 'a product';
+            const profitPerUnit = document.getElementById('profitPerUnit').textContent;
+            const netProfit = document.getElementById('netProfit').textContent;
+            const netMargin = document.getElementById('netMargin').textContent;
+            
+            const shareText = `I just calculated profits for ${productName} using EcomGuru:
+- Profit per unit: ${profitPerUnit}
+- Total profit: ${netProfit}
+- Net margin: ${netMargin}
+
+Try it yourself!`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'EcomGuru Profit Calculation',
+                    text: shareText,
+                    url: window.location.href
+                }).catch(err => {
+                    console.log('Error sharing:', err);
+                    copyToClipboard(shareText);
+                });
+            } else {
+                copyToClipboard(shareText);
+            }
+        }
+
+        // Copy to clipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Calculation copied to clipboard!', 'success');
+            }).catch(err => {
+                console.error('Could not copy text: ', err);
+                showToast('Failed to copy to clipboard', 'error');
+            });
+        }
+
+        // Show toast notification
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-4 right-4 px-4 py-2 rounded-md shadow-lg text-white ${
+                type === 'success' ? 'bg-green-500' : 'bg-red-500'
+            }`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

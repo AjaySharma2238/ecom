@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecommerce Guides | EcomGuru</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .platform-card {
+            transition: all 0.3s ease;
+        }
+        .platform-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .section-content {
+            display: none;
+        }
+        .section-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .bookmarked {
+            color: #f59e0b;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-chart-line text-indigo-600 text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-gray-800">EcomGuru</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <a href="dashboard.html" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+                        <i class="fas fa-arrow-left mr-1"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                Ecommerce Selling Guides
+            </h1>
+            <p class="mt-3 text-xl text-gray-500">
+                Choose your platform to view detailed selling instructions
+            </p>
+        </div>
+
+        <!-- Platform Selection -->
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-3 mb-12">
+            <!-- Amazon Card -->
+            <div class="platform-card bg-white overflow-hidden shadow rounded-lg cursor-pointer" data-platform="amazon">
+                <div class="px-4 py-5 sm:p-6 text-center">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon" class="h-12 mx-auto mb-4">
+                    <h3 class="text-lg font-medium text-gray-900">Amazon Seller Guide</h3>
+                    <p class="mt-2 text-sm text-gray-500">Learn how to sell on Amazon Marketplace</p>
+                </div>
+            </div>
+
+            <!-- Flipkart Card -->
+            <div class="platform-card bg-white overflow-hidden shadow rounded-lg cursor-pointer" data-platform="flipkart">
+                <div class="px-4 py-5 sm:p-6 text-center">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Flipkart_logo.png" alt="Flipkart" class="h-12 mx-auto mb-4">
+                    <h3 class="text-lg font-medium text-gray-900">Flipkart Seller Guide</h3>
+                    <p class="mt-2 text-sm text-gray-500">Learn how to sell on Flipkart Marketplace</p>
+                </div>
+            </div>
+
+            <!-- Meesho Card -->
+            <div class="platform-card bg-white overflow-hidden shadow rounded-lg cursor-pointer" data-platform="meesho">
+                <div class="px-4 py-5 sm:p-6 text-center">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Meesho_Logo.png" alt="Meesho" class="h-12 mx-auto mb-4">
+                    <h3 class="text-lg font-medium text-gray-900">Meesho Seller Guide</h3>
+                    <p class="mt-2 text-sm text-gray-500">Learn how to sell on Meesho Marketplace</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Guide Content (Initially hidden) -->
+        <div id="guideContent" class="hidden bg-white shadow rounded-lg p-6 mb-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 id="platformTitle" class="text-2xl font-bold text-gray-900"></h2>
+                <button id="downloadPdf" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+                    <i class="fas fa-file-pdf mr-2"></i>Download Guide
+                </button>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <div class="border-b border-gray-200 mb-6">
+                <nav class="-mb-px flex space-x-8">
+                    <button class="tab-link border-indigo-500 text-indigo-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-section="registration">
+                        Registration Steps
+                    </button>
+                    <button class="tab-link border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-section="documents">
+                        Required Documents
+                    </button>
+                    <button class="tab-link border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-section="fees">
+                        Fee Structure
+                    </button>
+                    <button class="tab-link border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-section="shipping">
+                        Shipping Details
+                    </button>
+                    <button class="tab-link border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-section="commission">
+                        Commission Breakdown
+                    </button>
+                    <button class="tab-link border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-section="tips">
+                        Selling Tips
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Bookmark Button -->
+            <div class="mb-6">
+                <button id="bookmarkBtn" class="text-gray-500 hover:text-yellow-500">
+                    <i class="far fa-bookmark mr-2"></i><span>Bookmark this section</span>
+                </button>
+            </div>
+
+            <!-- Section Contents -->
+            <div id="registration" class="section-content">
+                <h3 class="text-xl font-semibold mb-4">Registration Process</h3>
+                <div id="registrationContent" class="prose max-w-none">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+            </div>
+
+            <div id="documents" class="section-content">
+                <h3 class="text-xl font-semibold mb-4">Required Documents</h3>
+                <div id="documentsContent" class="prose max-w-none">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+            </div>
+
+            <div id="fees" class="section-content">
+                <h3 class="text-xl font-semibold mb-4">Fee Structure</h3>
+                <div id="feesContent" class="prose max-w-none">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+            </div>
+
+            <div id="shipping" class="section-content">
+                <h3 class="text-xl font-semibold mb-4">Shipping Details</h3>
+                <div id="shippingContent" class="prose max-w-none">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+            </div>
+
+            <div id="commission" class="section-content">
+                <h3 class="text-xl font-semibold mb-4">Commission Breakdown</h3>
+                <div id="commissionContent" class="prose max-w-none">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+            </div>
+
+            <div id="tips" class="section-content">
+                <h3 class="text-xl font-semibold mb-4">Selling Tips</h3>
+                <div id="tipsContent" class="prose max-w-none">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Guide content data
+        const guideData = {
+            amazon: {
+                title: "Amazon Seller Guide",
+                registration: `
+                    <ol class="list-decimal pl-5 space-y-2">
+                        <li>Go to <a href="https://sellercentral.amazon.in" class="text-indigo-600" target="_blank">Amazon Seller Central</a></li>
+                        <li>Click on 'Register now' button</li>
+                        <li>Enter your business email and create password</li>
+                        <li>Provide business information (name, address, GSTIN)</li>
+                        <li>Verify your identity via OTP</li>
+                        <li>Set up your payment method (bank account details)</li>
+                        <li>Complete tax information</li>
+                        <li>Submit required documents for verification</li>
+                        <li>Wait for approval (typically 1-3 business days)</li>
+                    </ol>
+                `,
+                documents: `
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>PAN Card (for individual) or Company PAN</li>
+                        <li>GSTIN certificate (mandatory for most categories)</li>
+                        <li>Bank account details (cancelled cheque or bank statement)</li>
+                        <li>Identity proof (Aadhaar, Passport, or Driver's License)</li>
+                        <li>Address proof (if different from PAN/GST)</li>
+                        <li>Brand authorization letter (for brand-name products)</li>
+                        <li>Product safety certificates (for specific categories)</li>
+                    </ul>
+                `,
+                fees: `
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fee Type</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Professional Selling Plan</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">₹4,999/month + taxes</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Referral Fee</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">5-15% (varies by category)</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Closing Fee</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">₹10-₹20 per item</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Shipping Fee</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">Varies by weight/dimensions</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Storage Fee</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">₹40/cubic foot/month (varies by season)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `,
+                shipping: `
+                    <h4 class="font-semibold mb-2">Fulfillment Options:</h4>
+                    <ul class="list-disc pl-5 space-y-2 mb-4">
+                        <li><strong>FBA (Fulfillment by Amazon):</strong> Amazon handles storage, packing and shipping</li>
+                        <li><strong>Seller-Fulfilled Prime:</strong> You ship directly but must meet Amazon's delivery standards</li>
+                        <li><strong>Easy Ship:</strong> Amazon picks up from your location</li>
+                        <li><strong>Self-Ship:</strong> You handle all logistics</li>
+                    </ul>
+                    <h4 class="font-semibold mb-2">Shipping Rates:</h4>
+                    <p>FBA fees vary by product size/weight tier. Amazon provides a <a href="#" class="text-indigo-600">fee calculator</a> to estimate costs.</p>
+                `,
+                commission: `
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Referral Fee %</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Min Fee</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Electronics</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">8%</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">₹30</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Home & Kitchen</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">12%</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">₹30</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Clothing</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">15%</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">₹30</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Books</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">5%</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">₹10</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `,
+                tips: `
+                    <h4 class="font-semibold mb-2">Listing Optimization:</h4>
+                    <ul class="list-disc pl-5 space-y-2 mb-4">
+                        <li>Use high-quality images (minimum 1000x1000 pixels)</li>
+                        <li>Include multiple angles and lifestyle images</li>
+                        <li>Write detailed product titles with keywords</li>
+                        <li>Use bullet points for key features</li>
+                        <li>Provide thorough product descriptions</li>
+                        <li>Include size charts for apparel</li>
+                    </ul>
+                    <h4 class="font-semibold mb-2">Pricing Strategies:</h4>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>Start with competitive pricing to get initial sales</li>
+                        <li>Use Amazon's automated pricing tools</li>
+                        <li>Run promotions and lightning deals</li>
+                        <li>Bundle complementary products</li>
+                        <li>Monitor competitors' pricing regularly</li>
+                    </ul>
+                `
+            },
+            flipkart: {
+                title: "Flipkart Seller Guide",
+                registration: `
+                    <ol class="list-decimal pl-5 space-y-2">
+                        <li>Visit <a href="https://seller.flipkart.com" class="text-indigo-600" target="_blank">Flipkart Seller Hub</a></li>
+                        <li>Click on 'Start Selling' button</li>
+                        <li>Enter your mobile number and email address</li>
+                        <li>Provide business details (GSTIN, PAN, bank details)</li>
+                        <li>Select your product categories</li>
+                        <li>Upload required documents</li>
+                        <li>Complete KYC verification</li>
+                        <li>Wait for approval (2-5 business days)</li>
+                    </ol>
+                `,
+                // Other sections follow same pattern as Amazon...
+                documents: `...`,
+                fees: `...`,
+                shipping: `...`,
+                commission: `...`,
+                tips: `...`
+            },
+            meesho: {
+                title: "Meesho Seller Guide",
+                registration: `
+                    <ol class="list-decimal pl-5 space-y-2">
+                        <li>Download the Meesho Seller app from Play Store/App Store</li>
+                        <li>Sign up with your mobile number</li>
+                        <li>Enter basic business information</li>
+                        <li>Upload product catalog (minimum 5 products)</li>
+                        <li>Submit required documents</li>
+                        <li>Complete verification process</li>
+                        <li>Start receiving orders (approval within 24-48 hours)</li>
+                    </ol>
+                `,
+                // Other sections follow same pattern as Amazon...
+                documents: `...`,
+                fees: `...`,
+                shipping: `...`,
+                commission: `...`,
+                tips: `...`
+            }
+        };
+
+        // DOM elements
+        const platformCards = document.querySelectorAll('.platform-card');
+        const guideContent = document.getElementById('guideContent');
+        const platformTitle = document.getElementById('platformTitle');
+        const tabLinks = document.querySelectorAll('.tab-link');
+        const sectionContents = document.querySelectorAll('.section-content');
+        const bookmarkBtn = document.getElementById('bookmarkBtn');
+        const downloadPdfBtn = document.getElementById('downloadPdf');
+
+        // Current state
+        let currentPlatform = null;
+        let currentSection = 'registration';
+        let bookmarks = JSON.parse(localStorage.getItem('guideBookmarks') || '{}');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load platform selection
+            platformCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    currentPlatform = this.dataset.platform;
+                    showPlatformGuide(currentPlatform);
+                });
+            });
+
+            // Tab navigation
+            tabLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    currentSection = this.dataset.section;
+                    showSection(currentSection);
+                    updateActiveTab();
+                });
+            });
+
+            // Bookmark button
+            bookmarkBtn.addEventListener('click', toggleBookmark);
+
+            // PDF download (simulated)
+            downloadPdfBtn.addEventListener('click', function() {
+                alert('PDF download would be generated here in a real implementation');
+            });
+
+            // Check for bookmarked sections
+            updateBookmarkButton();
+        });
+
+        // Show platform guide
+        function showPlatformGuide(platform) {
+            const data = guideData[platform];
+            
+            // Update UI
+            platformTitle.textContent = data.title;
+            document.getElementById('registrationContent').innerHTML = data.registration;
+            document.getElementById('documentsContent').innerHTML = data.documents;
+            document.getElementById('feesContent').innerHTML = data.fees;
+            document.getElementById('shippingContent').innerHTML = data.shipping;
+            document.getElementById('commissionContent').innerHTML = data.commission;
+            document.getElementById('tipsContent').innerHTML = data.tips;
+            
+            // Show content area
+            guideContent.classList.remove('hidden');
+            
+            // Reset to first section
+            currentSection = 'registration';
+            showSection(currentSection);
+            updateActiveTab();
+            
+            // Scroll to content
+            guideContent.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Show section content
+        function showSection(sectionId) {
+            sectionContents.forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            updateBookmarkButton();
+        }
+
+        // Update active tab style
+        function updateActiveTab() {
+            tabLinks.forEach(link => {
+                if (link.dataset.section === currentSection) {
+                    link.classList.add('border-indigo-500', 'text-indigo-600');
+                    link.classList.remove('border-transparent', 'text-gray-500');
+                } else {
+                    link.classList.remove('border-indigo-500', 'text-indigo-600');
+                    link.classList.add('border-transparent', 'text-gray-500');
+                }
+            });
+        }
+
+        // Toggle bookmark
+        function toggleBookmark() {
+            if (!currentPlatform || !currentSection) return;
+            
+            const bookmarkKey = `${currentPlatform}-${currentSection}`;
+            
+            if (bookmarks[bookmarkKey]) {
+                delete bookmarks[bookmarkKey];
+            } else {
+                bookmarks[bookmarkKey] = true;
+            }
+            
+            localStorage.setItem('guideBookmarks', JSON.stringify(bookmarks));
+            updateBookmarkButton();
+        }
+
+        // Update bookmark button state
+        function updateBookmarkButton() {
+            if (!currentPlatform || !currentSection) return;
+            
+            const bookmarkKey = `${currentPlatform}-${currentSection}`;
+            const icon = bookmarkBtn.querySelector('i');
+            const text = bookmarkBtn.querySelector('span');
+            
+            if (bookmarks[bookmarkKey]) {
+                icon.classList.remove('far');
+                icon.classList.add('fas', 'bookmarked');
+                text.textContent = 'Bookmarked';
+            } else {
+                icon.classList.remove('fas', 'bookmarked');
+                icon.classList.add('far');
+                text.textContent = 'Bookmark this section';
+            }
+        }
+    </script>
+</body>
+</html>

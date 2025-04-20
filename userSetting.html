@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Settings | EcomGuru</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .settings-card {
+            transition: all 0.3s ease;
+        }
+        .settings-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tab-button.active {
+            border-bottom: 2px solid #6366f1;
+            color: #6366f1;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-chart-line text-indigo-600 text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-gray-800">EcomGuru</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <a href="dashboard.html" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+                        <i class="fas fa-arrow-left mr-1"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                Profile Settings
+            </h1>
+            <p class="mt-3 text-xl text-gray-500">
+                Manage your account preferences and security
+            </p>
+        </div>
+
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+            <!-- Tabs -->
+            <div class="border-b border-gray-200">
+                <nav class="flex -mb-px">
+                    <button id="accountTab" class="tab-button active mr-8 py-4 px-1 text-center border-b-2 font-medium text-sm">
+                        Account Information
+                    </button>
+                    <button id="securityTab" class="tab-button mr-8 py-4 px-1 text-center border-b-2 font-medium text-sm">
+                        Security
+                    </button>
+                    <button id="preferencesTab" class="tab-button py-4 px-1 text-center border-b-2 font-medium text-sm">
+                        Preferences
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Tab Contents -->
+            <div class="p-6">
+                <!-- Account Information Tab -->
+                <div id="accountContent" class="tab-content">
+                    <div class="md:grid md:grid-cols-3 md:gap-6">
+                        <div class="md:col-span-1">
+                            <h3 class="text-lg font-medium leading-6 text-gray-900">Profile Information</h3>
+                            <p class="mt-1 text-sm text-gray-600">
+                                Update your basic account information and seller type.
+                            </p>
+                        </div>
+                        <div class="mt-5 md:mt-0 md:col-span-2">
+                            <form id="profileForm">
+                                <div class="shadow overflow-hidden sm:rounded-md">
+                                    <div class="px-4 py-5 bg-white sm:p-6">
+                                        <div class="grid grid-cols-6 gap-6">
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <label for="name" class="block text-sm font-medium text-gray-700">Full name</label>
+                                                <input type="text" name="name" id="name" autocomplete="given-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                            </div>
+
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
+                                                <input type="text" name="email" id="email" autocomplete="email" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                            </div>
+
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <label for="sellerType" class="block text-sm font-medium text-gray-700">Seller Type</label>
+                                                <select id="sellerType" name="sellerType" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                                    <option value="new">New Seller</option>
+                                                    <option value="experienced">Experienced Seller</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                                                <input type="text" name="phone" id="phone" autocomplete="tel" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                                        <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                            Save Profile
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Tab -->
+                <div id="securityContent" class="tab-content hidden">
+                    <div class="md:grid md:grid-cols-3 md:gap-6">
+                        <div class="md:col-span-1">
+                            <h3 class="text-lg font-medium leading-6 text-gray-900">Update Password</h3>
+                            <p class="mt-1 text-sm text-gray-600">
+                                Change your password to keep your account secure.
+                            </p>
+                        </div>
+                        <div class="mt-5 md:mt-0 md:col-span-2">
+                            <form id="passwordForm">
+                                <div class="shadow overflow-hidden sm:rounded-md">
+                                    <div class="px-4 py-5 bg-white sm:p-6">
+                                        <div class="grid grid-cols-6 gap-6">
+                                            <div class="col-span-6">
+                                                <label for="currentPassword" class="block text-sm font-medium text-gray-700">Current Password</label>
+                                                <input type="password" name="currentPassword" id="currentPassword" autocomplete="current-password" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                            </div>
+
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <label for="newPassword" class="block text-sm font-medium text-gray-700">New Password</label>
+                                                <input type="password" name="newPassword" id="newPassword" autocomplete="new-password" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                            </div>
+
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+                                                <input type="password" name="confirmPassword" id="confirmPassword" autocomplete="new-password" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                                        <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                            Update Password
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preferences Tab -->
+                <div id="preferencesContent" class="tab-content hidden">
+                    <div class="md:grid md:grid-cols-3 md:gap-6">
+                        <div class="md:col-span-1">
+                            <h3 class="text-lg font-medium leading-6 text-gray-900">Preferences</h3>
+                            <p class="mt-1 text-sm text-gray-600">
+                                Set your default platform and currency preferences.
+                            </p>
+                        </div>
+                        <div class="mt-5 md:mt-0 md:col-span-2">
+                            <form id="preferencesForm">
+                                <div class="shadow overflow-hidden sm:rounded-md">
+                                    <div class="px-4 py-5 bg-white sm:p-6">
+                                        <div class="grid grid-cols-6 gap-6">
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <label for="defaultPlatform" class="block text-sm font-medium text-gray-700">Default Platform</label>
+                                                <select id="defaultPlatform" name="defaultPlatform" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                                    <option value="amazon">Amazon</option>
+                                                    <option value="flipkart">Flipkart</option>
+                                                    <option value="meesho">Meesho</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <label for="currency" class="block text-sm font-medium text-gray-700">Currency</label>
+                                                <select id="currency" name="currency" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                                    <option value="INR">Indian Rupee (₹)</option>
+                                                    <option value="USD">US Dollar ($)</option>
+                                                    <option value="EUR">Euro (€)</option>
+                                                    <option value="GBP">British Pound (£)</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-span-6">
+                                                <label class="block text-sm font-medium text-gray-700">Notifications</label>
+                                                <div class="mt-2 space-y-4">
+                                                    <div class="flex items-start">
+                                                        <div class="flex items-center h-5">
+                                                            <input id="emailNotifications" name="emailNotifications" type="checkbox" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                                        </div>
+                                                        <div class="ml-3 text-sm">
+                                                            <label for="emailNotifications" class="font-medium text-gray-700">Email Notifications</label>
+                                                            <p class="text-gray-500">Receive important updates via email</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex items-start">
+                                                        <div class="flex items-center h-5">
+                                                            <input id="promoEmails" name="promoEmails" type="checkbox" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                                        </div>
+                                                        <div class="ml-3 text-sm">
+                                                            <label for="promoEmails" class="font-medium text-gray-700">Promotional Emails</label>
+                                                            <p class="text-gray-500">Receive special offers and promotions</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                                        <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                            Save Preferences
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // DOM elements
+        const accountTab = document.getElementById('accountTab');
+        const securityTab = document.getElementById('securityTab');
+        const preferencesTab = document.getElementById('preferencesTab');
+        const accountContent = document.getElementById('accountContent');
+        const securityContent = document.getElementById('securityContent');
+        const preferencesContent = document.getElementById('preferencesContent');
+        const profileForm = document.getElementById('profileForm');
+        const passwordForm = document.getElementById('passwordForm');
+        const preferencesForm = document.getElementById('preferencesForm');
+
+        // Current user data
+        let currentUser = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            
+            // Tab switching
+            accountTab.addEventListener('click', () => switchTab('account'));
+            securityTab.addEventListener('click', () => switchTab('security'));
+            preferencesTab.addEventListener('click', () => switchTab('preferences'));
+            
+            // Form submissions
+            profileForm.addEventListener('submit', saveProfile);
+            passwordForm.addEventListener('submit', updatePassword);
+            preferencesForm.addEventListener('submit', savePreferences);
+        });
+
+        // Load user data from localStorage
+        function loadUserData() {
+            currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+            
+            // Populate profile form
+            if (currentUser) {
+                document.getElementById('name').value = currentUser.name || '';
+                document.getElementById('email').value = currentUser.email || '';
+                document.getElementById('sellerType').value = currentUser.sellerType || 'new';
+                document.getElementById('phone').value = currentUser.phone || '';
+                
+                // Populate preferences
+                document.getElementById('defaultPlatform').value = currentUser.defaultPlatform || 'amazon';
+                document.getElementById('currency').value = currentUser.currency || 'INR';
+                document.getElementById('emailNotifications').checked = currentUser.emailNotifications !== false;
+                document.getElementById('promoEmails').checked = currentUser.promoEmails || false;
+            }
+        }
+
+        // Switch between tabs
+        function switchTab(tab) {
+            // Update active tab button
+            accountTab.classList.remove('active');
+            securityTab.classList.remove('active');
+            preferencesTab.classList.remove('active');
+            
+            // Hide all content
+            accountContent.classList.add('hidden');
+            securityContent.classList.add('hidden');
+            preferencesContent.classList.add('hidden');
+            
+            // Show selected tab
+            switch(tab) {
+                case 'account':
+                    accountTab.classList.add('active');
+                    accountContent.classList.remove('hidden');
+                    break;
+                case 'security':
+                    securityTab.classList.add('active');
+                    securityContent.classList.remove('hidden');
+                    break;
+                case 'preferences':
+                    preferencesTab.classList.add('active');
+                    preferencesContent.classList.remove('hidden');
+                    break;
+            }
+        }
+
+        // Save profile information
+        function saveProfile(e) {
+            e.preventDefault();
+            
+            // Get form values
+            currentUser.name = document.getElementById('name').value;
+            currentUser.email = document.getElementById('email').value;
+            currentUser.sellerType = document.getElementById('sellerType').value;
+            currentUser.phone = document.getElementById('phone').value;
+            
+            // Save to localStorage
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            alert('Profile updated successfully!');
+        }
+
+        // Update password
+        function updatePassword(e) {
+            e.preventDefault();
+            
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Validate inputs
+            if (!currentPassword) {
+                alert('Please enter your current password');
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                alert('New password must be at least 6 characters');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                alert('New passwords do not match');
+                return;
+            }
+            
+            // In a real app, you would verify current password with server
+            // For this demo, we'll just update it
+            currentUser.password = newPassword;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            // Update users array if exists
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const userIndex = users.findIndex(u => u.email === currentUser.email);
+            if (userIndex !== -1) {
+                users[userIndex].password = newPassword;
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+            
+            alert('Password updated successfully!');
+            
+            // Clear form
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+        }
+
+        // Save preferences
+        function savePreferences(e) {
+            e.preventDefault();
+            
+            // Get form values
+            currentUser.defaultPlatform = document.getElementById('defaultPlatform').value;
+            currentUser.currency = document.getElementById('currency').value;
+            currentUser.emailNotifications = document.getElementById('emailNotifications').checked;
+            currentUser.promoEmails = document.getElementById('promoEmails').checked;
+            
+            // Save to localStorage
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            alert('Preferences saved successfully!');
+        }
+    </script>
+</body>
+</html>
